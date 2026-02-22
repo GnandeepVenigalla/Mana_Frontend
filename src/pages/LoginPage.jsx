@@ -58,13 +58,13 @@ export default function LoginPage() {
 
             <div className="auth-left">
                 <div className="auth-branding">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40 }}>
-                        <div style={{ width: 56, height: 56, background: 'white', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6, boxShadow: 'var(--shadow-glow)' }}>
-                            <img src="/favicon.ico" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 40 }}>
+                        <div style={{ width: 48, height: 48, background: 'white', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 4, boxShadow: 'var(--shadow-glow)' }}>
+                            <img src="manakarma.png" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <span style={{ fontSize: 32, fontWeight: 900, background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', letterSpacing: -0.5, lineHeight: 1 }}>Mana Karma</span>
-                            <span style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 4, opacity: 0.8 }}>Powered by GD Enterprisier</span>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                            <span style={{ fontSize: 28, fontWeight: 900, background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', letterSpacing: -0.5, lineHeight: 1 }}>Mana Karma</span>
+                            <span style={{ fontSize: 11, color: 'var(--color-text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1, opacity: 0.7 }}>Powered by GD Enterprisier</span>
                         </div>
                     </div>
                     <h1 className="auth-headline">Your Money,<br /><span style={{ background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Smarter.</span></h1>
@@ -86,7 +86,7 @@ export default function LoginPage() {
             <div className="auth-right">
                 <div className="auth-form-container">
                     <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'center' }}>
-                        <img src="/favicon.ico" alt="Mana Karma" style={{ width: 64, height: 64 }} />
+                        <img src="manakarma.png" alt="Mana Karma" style={{ width: 64, height: 64 }} />
                     </div>
                     <h2 className="auth-form-title text-center">Welcome Back</h2>
                     <p className="auth-form-sub text-center">Sign in to your Mana Karma account</p>

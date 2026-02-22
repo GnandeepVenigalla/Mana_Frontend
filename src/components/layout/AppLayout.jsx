@@ -40,14 +40,16 @@ export default function AppLayout() {
 
             {/* Sidebar */}
             <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
-                <div className="sidebar-logo" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 4 }}>
+                <div className="sidebar-logo">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                         <div className="sidebar-logo-brand">
-                            <img src="/favicon.ico" alt="Mana Karma" />
+                            <img src="manakarma.png" alt="Mana Karma" />
                         </div>
-                        <span className="sidebar-logo-text">Mana Karma</span>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <span className="sidebar-logo-text">Mana Karma</span>
+                            <span style={{ fontSize: 9, color: 'var(--color-text-muted)', opacity: 0.8, fontWeight: 500 }}>Powered by GD Enterprisier</span>
+                        </div>
                     </div>
-                    <div style={{ fontSize: 9, color: 'var(--color-text-muted)', paddingLeft: 52, opacity: 0.8, marginTop: -4 }}>Powered by GD Enterprisier</div>
                 </div>
 
                 <nav className="sidebar-nav">
