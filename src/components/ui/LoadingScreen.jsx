@@ -21,7 +21,7 @@ export default function LoadingScreen() {
                 animation: 'pulse 1.5s ease-in-out infinite',
                 boxShadow: '0 0 20px rgba(255,255,255,0.2)',
             }}>
-                <img src="/favicon.ico" alt="Mana Karma" style={{ width: '100%', height: '100%' }} />
+                <img src="https://raw.githubusercontent.com/GnandeepVenigalla/Mana_Karma/main/public/manakarma.png" alt="Mana Karma" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                 <div className="spinner" />

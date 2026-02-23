@@ -73,7 +73,7 @@ export default function RegisterPage() {
                 <div className="auth-branding">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40 }}>
                         <div style={{ width: 56, height: 56, background: 'white', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6, boxShadow: 'var(--shadow-glow)' }}>
-                            <img src="/favicon.ico" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                            <img src="https://raw.githubusercontent.com/GnandeepVenigalla/Mana_Karma/main/public/manakarma.png" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <span style={{ fontSize: 32, fontWeight: 900, background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', letterSpacing: -0.5, lineHeight: 1 }}>Mana Karma</span>
@@ -103,7 +103,7 @@ export default function RegisterPage() {
             <div className="auth-right">
                 <div className="auth-form-container">
                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
-                        <img src="/favicon.ico" alt="Mana Karma" style={{ width: 64, height: 64 }} />
+                        <img src="https://raw.githubusercontent.com/GnandeepVenigalla/Mana_Karma/main/public/manakarma.png" alt="Mana Karma" style={{ width: 64, height: 64 }} />
                     </div>
                     <h2 className="auth-form-title text-center">Create Your Account</h2>
                     <p className="auth-form-sub text-center">Step {step} of 2 — {step === 1 ? 'Personal Info' : 'Confirm & Create'}</p>
