@@ -47,7 +47,7 @@ export default function AppLayout() {
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <span className="sidebar-logo-text">Mana Karma</span>
-                            <span style={{ fontSize: 9, color: 'var(--color-text-muted)', opacity: 0.8, fontWeight: 500 }}>Powered by GD Enterprisier</span>
+                            <span style={{ fontSize: 9, color: 'var(--color-text-muted)', opacity: 0.8, fontWeight: 500 }}>Powered by GD Enterprises</span>
                         </div>
                     </div>
                 </div>

@@ -77,7 +77,7 @@ export default function RegisterPage() {
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <span style={{ fontSize: 32, fontWeight: 900, background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', letterSpacing: -0.5, lineHeight: 1 }}>Mana Karma</span>
-                            <span style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 4, opacity: 0.8 }}>Powered by GD Enterprisier</span>
+                            <span style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 4, opacity: 0.8 }}>Powered by GD Enterprises</span>
                         </div>
                     </div>
                     <h1 className="auth-headline">Start Your<br /><span style={{ background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Financial Journey</span></h1>

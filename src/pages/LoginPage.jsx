@@ -64,7 +64,7 @@ export default function LoginPage() {
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             <span style={{ fontSize: 28, fontWeight: 900, background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', letterSpacing: -0.5, lineHeight: 1 }}>Mana Karma</span>
-                            <span style={{ fontSize: 11, color: 'var(--color-text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1, opacity: 0.7 }}>Powered by GD Enterprisier</span>
+                            <span style={{ fontSize: 11, color: 'var(--color-text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1, opacity: 0.7 }}>Powered by GD Enterprises</span>
                         </div>
                     </div>
                     <h1 className="auth-headline">Your Money,<br /><span style={{ background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Smarter.</span></h1>
