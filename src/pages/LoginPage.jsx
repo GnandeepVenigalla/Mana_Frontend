@@ -60,7 +60,7 @@ export default function LoginPage() {
                 <div className="auth-branding">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 40 }}>
                         <div style={{ width: 48, height: 48, background: 'white', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 4, boxShadow: 'var(--shadow-glow)' }}>
-                            <img src={`${import.meta.env.BASE_URL}manakarma.png`} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                            <img src="https://raw.githubusercontent.com/GnandeepVenigalla/Mana_Frontend/main/public/manakarma.png" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             <span style={{ fontSize: 28, fontWeight: 900, background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', letterSpacing: -0.5, lineHeight: 1 }}>Mana Karma</span>
@@ -86,7 +86,7 @@ export default function LoginPage() {
             <div className="auth-right">
                 <div className="auth-form-container">
                     <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'center' }}>
-                        <img src={`${import.meta.env.BASE_URL}manakarma.png`} alt="Mana Karma" style={{ width: 64, height: 64 }} />
+                        <img src="https://raw.githubusercontent.com/GnandeepVenigalla/Mana_Frontend/main/public/manakarma.png" alt="Mana Karma" style={{ width: 64, height: 64 }} />
                     </div>
                     <h2 className="auth-form-title text-center">Welcome Back</h2>
                     <p className="auth-form-sub text-center">Sign in to your Mana Karma account</p>
