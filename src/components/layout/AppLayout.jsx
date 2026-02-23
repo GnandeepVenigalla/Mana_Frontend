@@ -43,7 +43,7 @@ export default function AppLayout() {
                 <div className="sidebar-logo">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                         <div className="sidebar-logo-brand">
-                            <img src="https://raw.githubusercontent.com/GnandeepVenigalla/Mana_Frontend/main/public/manakarma.png" alt="Mana Karma" />
+                            <img src="https://raw.githubusercontent.com/GnandeepVenigalla/Mana_Karma/main/public/manakarma.png" alt="Mana Karma" />
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <span className="sidebar-logo-text">Mana Karma</span>
