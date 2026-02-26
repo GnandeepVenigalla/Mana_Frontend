@@ -1,18 +1,18 @@
 {
     "name": "Mana Karma",
     "short_name": "Mana Karma",
-    "start_url": "/mana_karma",
+    "start_url": "/Mana_Karma/",
     "display": "standalone",
     "background_color": "#0b0f19",
     "theme_color": "#4f8ef7",
     "icons": [
         {
-            "src": "/mana_karma/manakarma_logo.png",
+            "src": "/Mana_Karma/manakarma_logo.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "/mana_karma/manakarma_logo.png",
+            "src": "/Mana_Karma/manakarma_logo.png",
             "sizes": "512x512",
             "type": "image/png"
         }
