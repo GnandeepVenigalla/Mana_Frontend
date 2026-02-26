@@ -157,12 +157,12 @@ export default function DashboardPage() {
                     <p className="page-subtitle">{MONTHS[month - 1]} {year} {t('dash_overview')}</p>
                 </div>
                 <div className="w-full-mobile" style={{ display: 'flex', gap: 12 }}>
-                    <select className="form-input" style={{ flex: 1, height: 38 }} value={month} onChange={(e) => setMonth(parseInt(e.target.value))}>
+                    <select className="form-input" style={{ flex: 1, padding: '8px 14px' }} value={month} onChange={(e) => setMonth(parseInt(e.target.value))}>
                         {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((m, i) => (
                             <option key={i} value={i + 1}>{m}</option>
                         ))}
                     </select>
-                    <select className="form-input" style={{ flex: 1, height: 38 }} value={year} onChange={(e) => setYear(parseInt(e.target.value))}>
+                    <select className="form-input" style={{ flex: 1, padding: '8px 14px' }} value={year} onChange={(e) => setYear(parseInt(e.target.value))}>
                         {[now.getFullYear(), now.getFullYear() - 1].map(y => (
                             <option key={y} value={y}>{y}</option>
                         ))}
