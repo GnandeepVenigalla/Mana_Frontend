@@ -9,6 +9,7 @@ import TransactionsPage from './pages/TransactionsPage';
 import StatementsPage from './pages/StatementsPage';
 import InsightsPage from './pages/InsightsPage';
 import ProfilePage from './pages/ProfilePage';
+import GoalsPage from './pages/GoalsPage';
 import AppLayout from './components/layout/AppLayout';
 import LoadingScreen from './components/ui/LoadingScreen';
 
@@ -47,6 +48,7 @@ function AppRoutes() {
         <Route path="transactions" element={<TransactionsPage />} />
         <Route path="statements" element={<StatementsPage />} />
         <Route path="insights" element={<InsightsPage />} />
+        <Route path="goals" element={<GoalsPage />} />
         <Route path="profile" element={<ProfilePage />} />
       </Route>
       <Route path="*" element={<Navigate to="/dashboard" replace />} />

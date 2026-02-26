@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
-import { Eye, EyeOff, LogIn, TrendingUp, Shield, PieChart } from 'lucide-react';
+import { Eye, EyeOff, LogIn, TrendingUp, Shield, PieChart, Globe } from 'lucide-react';
 
 const FEATURES = [
     { icon: '📊', tag: 'Smart Analytics', desc: 'AI-powered spending analysis and insights' },
@@ -13,6 +14,7 @@ const FEATURES = [
 export default function LoginPage() {
     const { login } = useAuth();
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
     const [form, setForm] = useState({ email: '', password: '' });
     const [showPw, setShowPw] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -32,7 +34,7 @@ export default function LoginPage() {
         setLoading(true);
         try {
             await login(form.email, form.password);
-            toast.success('Welcome back! 👋');
+            toast.success(t('welcome_back') + ' 👋');
         } catch (err) {
             const msg = err?.response?.data?.message || 'Login failed. Please try again.';
             toast.error(msg);
@@ -58,17 +60,32 @@ export default function LoginPage() {
 
             <div className="auth-left">
                 <div className="auth-branding">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 40 }}>
-                        <div style={{ width: 48, height: 48, background: 'white', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 4, boxShadow: 'var(--shadow-glow)' }}>
-                            <img src="https://raw.githubusercontent.com/GnandeepVenigalla/Mana_Karma/main/public/manakarma.png" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 40, width: '100%' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                            <div style={{ width: 48, height: 48, background: 'white', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 4, boxShadow: 'var(--shadow-glow)' }}>
+                                <img src="https://raw.githubusercontent.com/GnandeepVenigalla/Mana_Karma/main/public/manakarma.png" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                                <span style={{ fontSize: 28, fontWeight: 900, background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', letterSpacing: -0.5, lineHeight: 1 }}>Mana Karma</span>
+                                <span style={{ fontSize: 11, color: 'var(--color-text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1, opacity: 0.7 }}>Powered by GD Enterprises</span>
+                            </div>
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                            <span style={{ fontSize: 28, fontWeight: 900, background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', letterSpacing: -0.5, lineHeight: 1 }}>Mana Karma</span>
-                            <span style={{ fontSize: 11, color: 'var(--color-text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1, opacity: 0.7 }}>Powered by GD Enterprises</span>
+
+                        <div className="lang-switcher" style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.05)', padding: '6px 12px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.1)' }}>
+                            <Globe size={16} />
+                            <select
+                                value={i18n.language}
+                                onChange={(e) => i18n.changeLanguage(e.target.value)}
+                                style={{ background: 'transparent', border: 'none', color: 'inherit', outline: 'none', cursor: 'pointer', fontSize: 14 }}
+                            >
+                                <option value="en" style={{ color: '#000' }}>English</option>
+                                <option value="te" style={{ color: '#000' }}>తెలుగు</option>
+                            </select>
                         </div>
                     </div>
-                    <h1 className="auth-headline">Your Money,<br /><span style={{ background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Smarter.</span></h1>
-                    <p className="auth-sub">Analyze spending, track budgets, and get AI-powered financial guidance — all in one beautiful dashboard.</p>
+
+                    <h1 className="auth-headline">{t('headline').split(',')[0]},<br /><span style={{ background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{t('headline').split(',')[1]}</span></h1>
+                    <p className="auth-sub">{t('subheadline')}</p>
                     <div className="auth-features">
                         {FEATURES.map((f) => (
                             <div className="auth-feature-item" key={f.tag}>
@@ -88,12 +105,12 @@ export default function LoginPage() {
                     <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'center' }}>
                         <img src="https://raw.githubusercontent.com/GnandeepVenigalla/Mana_Karma/main/public/manakarma.png" alt="Mana Karma" style={{ width: 64, height: 64 }} />
                     </div>
-                    <h2 className="auth-form-title text-center">Welcome Back</h2>
-                    <p className="auth-form-sub text-center">Sign in to your Mana Karma account</p>
+                    <h2 className="auth-form-title text-center">{t('welcome_back')}</h2>
+                    <p className="auth-form-sub text-center">{t('sign_in_sub')}</p>
 
                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
                         <div className="form-group">
-                            <label className="form-label" htmlFor="login-email">Email Address</label>
+                            <label className="form-label" htmlFor="login-email">{t('email_lbl')}</label>
                             <input
                                 id="login-email"
                                 type="email"
@@ -107,7 +124,7 @@ export default function LoginPage() {
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label" htmlFor="login-password">Password</label>
+                            <label className="form-label" htmlFor="login-password">{t('pwd_lbl')}</label>
                             <div style={{ position: 'relative' }}>
                                 <input
                                     id="login-password"
@@ -137,7 +154,7 @@ export default function LoginPage() {
                             disabled={loading}
                             style={{ justifyContent: 'center', marginTop: 4 }}
                         >
-                            {loading ? <><div className="spinner" style={{ width: 18, height: 18 }} />Signing In...</> : <><LogIn size={18} />Sign In</>}
+                            {loading ? <><div className="spinner" style={{ width: 18, height: 18 }} />{t('signin_btn')}...</> : <><LogIn size={18} />{t('signin_btn')}</>}
                         </button>
                     </form>
 
@@ -151,13 +168,13 @@ export default function LoginPage() {
                         }}
                     >
                         <p style={{ fontSize: 13, textAlign: 'center', color: 'var(--color-text-muted)' }}>
-                            🎯 <strong style={{ color: 'var(--color-primary)' }}>Try Demo Account</strong> — demo@manakarma.com / demo123456
+                            🎯 <strong style={{ color: 'var(--color-primary)' }}>{t('demo_account')}</strong> — demo@manakarma.com / demo123456
                         </p>
                     </div>
 
                     <p className="auth-switch">
-                        Don't have an account?{' '}
-                        <a onClick={() => navigate('/register')}>Create one free</a>
+                        {t('no_account')}{' '}
+                        <a onClick={() => navigate('/register')}>{t('create_one')}</a>
                     </p>
                 </div>
             </div>

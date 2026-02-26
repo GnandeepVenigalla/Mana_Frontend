@@ -6,6 +6,8 @@ import {
     AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
     PieChart, Pie, Cell, Legend, BarChart, Bar, CartesianGrid,
 } from 'recharts';
+import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '../lib/formatCurrency';
 import { TrendingUp, TrendingDown, DollarSign, PiggyBank, Upload, Plus, ArrowRight } from 'lucide-react';
 
 const CATEGORY_COLORS = {
@@ -63,14 +65,14 @@ function ScoreRing({ score, title = "Score" }) {
     );
 }
 
-function CustomTooltip({ active, payload, label }) {
+function CustomTooltip({ active, payload, label, currency, locale }) {
     if (!active || !payload?.length) return null;
     return (
         <div className="custom-tooltip">
             <div className="label">{label}</div>
             {payload.map(p => (
                 <div key={p.name} style={{ color: p.color, fontSize: 13 }}>
-                    {p.name}: <strong>${p.value?.toLocaleString('en-US', { minimumFractionDigits: 0 })}</strong>
+                    {p.name}: <strong>{formatCurrency(p.value, currency, locale)}</strong>
                 </div>
             ))}
         </div>
@@ -80,9 +82,13 @@ function CustomTooltip({ active, payload, label }) {
 export default function DashboardPage() {
     const { user } = useAuth();
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
     const now = new Date();
     const [month, setMonth] = useState(now.getMonth() + 1);
     const [year, setYear] = useState(now.getFullYear());
+
+    const locale = i18n.language === 'te' ? 'te-IN' : 'en-US';
+    const currency = user?.income?.currency || 'USD';
 
     const [summary, setSummary] = useState(null);
     const [insights, setInsights] = useState(null);
@@ -147,8 +153,8 @@ export default function DashboardPage() {
             {/* Header */}
             <div className="page-header flex-stack" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                    <h1 className="page-title">Good {now.getHours() < 12 ? 'Morning' : now.getHours() < 18 ? 'Afternoon' : 'Evening'}, {user?.firstName}! 👋</h1>
-                    <p className="page-subtitle">{MONTHS[month - 1]} {year} Financial Overview</p>
+                    <h1 className="page-title">{t(now.getHours() < 12 ? 'dash_morning' : now.getHours() < 18 ? 'dash_afternoon' : 'dash_evening')}, {user?.firstName}! 👋</h1>
+                    <p className="page-subtitle">{MONTHS[month - 1]} {year} {t('dash_overview')}</p>
                 </div>
                 <div className="w-full-mobile" style={{ display: 'flex', gap: 12 }}>
                     <select className="form-input" style={{ flex: 1, height: 38 }} value={month} onChange={(e) => setMonth(parseInt(e.target.value))}>
@@ -169,8 +175,8 @@ export default function DashboardPage() {
                 <div className="stat-card">
                     <div className="stat-icon blue"><DollarSign size={22} color="#4f8ef7" /></div>
                     <div>
-                        <div className="stat-label">Monthly Income</div>
-                        <div className="stat-value">${income.toLocaleString('en-US', { minimumFractionDigits: 0 })}</div>
+                        <div className="stat-label">{t('dash_monthly_income')}</div>
+                        <div className="stat-value">{formatCurrency(income, currency, locale)}</div>
                         <div className="stat-change up"><TrendingUp size={12} />{user?.income?.jobTitle || 'Total'}</div>
                     </div>
                 </div>
@@ -178,12 +184,12 @@ export default function DashboardPage() {
                 <div className="stat-card">
                     <div className="stat-icon red"><TrendingDown size={22} color="#ef4444" /></div>
                     <div>
-                        <div className="stat-label">Total Expenses</div>
+                        <div className="stat-label">{t('dash_total_expenses')}</div>
                         <div className="stat-value" style={{ color: expenses > income ? 'var(--color-danger)' : 'inherit' }}>
-                            ${expenses.toLocaleString('en-US', { minimumFractionDigits: 0 })}
+                            {formatCurrency(expenses, currency, locale)}
                         </div>
                         <div className="stat-change down">
-                            {income > 0 ? `${((expenses / income) * 100).toFixed(1)}% of income` : 'No income set'}
+                            {income > 0 ? `${((expenses / income) * 100).toFixed(1)} ${t('dash_pct_income')}` : t('dash_no_income_set')}
                         </div>
                     </div>
                 </div>
@@ -191,13 +197,13 @@ export default function DashboardPage() {
                 <div className="stat-card">
                     <div className="stat-icon green"><PiggyBank size={22} color="#10b981" /></div>
                     <div>
-                        <div className="stat-label">Net Savings</div>
+                        <div className="stat-label">{t('dash_net_savings')}</div>
                         <div className="stat-value" style={{ color: savings >= 0 ? 'var(--color-success)' : 'var(--color-danger)' }}>
-                            {savings >= 0 ? '+' : ''}{savings.toLocaleString('en-US', { minimumFractionDigits: 0, style: 'currency', currency: 'USD' })}
+                            {savings >= 0 ? '+' : ''}{formatCurrency(savings, currency, locale)}
                         </div>
                         <div className={`stat-change ${savings >= 0 ? 'up' : 'down'}`}>
                             {savings >= 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-                            {savingsRate}% savings rate
+                            {savingsRate} {t('dash_savings_rate')}
                         </div>
                     </div>
                 </div>
@@ -207,11 +213,11 @@ export default function DashboardPage() {
                         <span style={{ fontSize: 22 }}>📊</span>
                     </div>
                     <div>
-                        <div className="stat-label">Financial Score</div>
+                        <div className="stat-label">{t('dash_financial_score')}</div>
                         <div className="stat-value" style={{ color: score >= 700 ? 'var(--color-success)' : score >= 550 ? 'var(--color-warning)' : 'var(--color-danger)' }}>
                             {score || '—'}
                         </div>
-                        <div className="stat-change up">{insights?.scoreData?.spendingHealth || 'N/A'} spending health</div>
+                        <div className="stat-change up">{insights?.scoreData?.spendingHealth || 'N/A'} {t('dash_spending_health')}</div>
                     </div>
                 </div>
             </div>
@@ -221,7 +227,7 @@ export default function DashboardPage() {
                 {/* Trend chart */}
                 <div className="card">
                     <div className="flex-between mb-16">
-                        <h3 className="section-title" style={{ marginBottom: 0 }}>Income vs Expenses</h3>
+                        <h3 className="section-title" style={{ marginBottom: 0 }}>{t('dash_income_vs_expenses')}</h3>
                         <div className="period-tabs">
                             <button className="period-tab active">6M</button>
                         </div>
@@ -241,8 +247,8 @@ export default function DashboardPage() {
                                 </defs>
                                 <CartesianGrid stroke="rgba(255,255,255,0.04)" />
                                 <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
-                                <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
-                                <Tooltip content={<CustomTooltip />} />
+                                <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} tickFormatter={v => `${currency === 'INR' ? '₹' : '$'}${(v / 1000).toFixed(0)}k`} />
+                                <Tooltip content={<CustomTooltip currency={currency} locale={locale} />} />
                                 <Area type="monotone" dataKey="Income" stroke="#4f8ef7" fill="url(#incGrad)" strokeWidth={2} dot={false} />
                                 <Area type="monotone" dataKey="Expenses" stroke="#ef4444" fill="url(#expGrad)" strokeWidth={2} dot={false} />
                             </AreaChart>
@@ -250,8 +256,8 @@ export default function DashboardPage() {
                     ) : (
                         <div className="empty-state" style={{ padding: '40px 0' }}>
                             <div className="empty-icon">📈</div>
-                            <div className="empty-title">No Trend Data Yet</div>
-                            <p className="empty-desc">Upload a statement to see your spending trends over time.</p>
+                            <div className="empty-title">{t('dash_no_trend_data')}</div>
+                            <p className="empty-desc">{t('dash_no_trend_desc')}</p>
                         </div>
                     )}
                 </div>
@@ -259,7 +265,7 @@ export default function DashboardPage() {
                 {/* Pie chart */}
                 <div className="card">
                     <div className="flex-between mb-16">
-                        <h3 className="section-title" style={{ marginBottom: 0 }}>Spending Breakdown</h3>
+                        <h3 className="section-title" style={{ marginBottom: 0 }}>{t('dash_spending_breakdown')}</h3>
                         <span className="tag tag-blue">{MONTHS[month - 1]} {year}</span>
                     </div>
                     {pieData.length > 0 ? (
@@ -277,7 +283,7 @@ export default function DashboardPage() {
                                         <Cell key={i} fill={entry.color} />
                                     ))}
                                 </Pie>
-                                <Tooltip formatter={(value, name) => [`$${Number(value).toLocaleString('en-US', { minimumFractionDigits: 2 })}`, name]} contentStyle={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 8, fontSize: 12 }} itemStyle={{ color: '#ffffff' }} />
+                                <Tooltip formatter={(value, name) => [formatCurrency(value, currency, locale), name]} contentStyle={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 8, fontSize: 12 }} itemStyle={{ color: '#ffffff' }} />
                                 <Legend
                                     layout="horizontal"
                                     verticalAlign="bottom"
@@ -290,8 +296,8 @@ export default function DashboardPage() {
                     ) : (
                         <div className="empty-state" style={{ padding: '40px 0' }}>
                             <div className="empty-icon">🥧</div>
-                            <div className="empty-title">No Expense Data</div>
-                            <p className="empty-desc">Upload your bank statement to see spending categories.</p>
+                            <div className="empty-title">{t('dash_no_expense_data')}</div>
+                            <p className="empty-desc">{t('dash_no_expense_desc')}</p>
                         </div>
                     )}
                 </div>
@@ -302,9 +308,9 @@ export default function DashboardPage() {
                 {/* AI Insights preview */}
                 <div className="card">
                     <div className="flex-between mb-16">
-                        <h3 className="section-title" style={{ marginBottom: 0 }}>💡 AI Insights</h3>
+                        <h3 className="section-title" style={{ marginBottom: 0 }}>💡 {t('dash_ai_insights')}</h3>
                         <button className="btn btn-ghost btn-sm" onClick={() => navigate('/insights')} style={{ gap: 4 }}>
-                            View All <ArrowRight size={14} />
+                            {t('dash_view_all')} <ArrowRight size={14} />
                         </button>
                     </div>
                     {topInsights.length > 0 ? (
@@ -329,8 +335,8 @@ export default function DashboardPage() {
                     ) : (
                         <div className="empty-state" style={{ padding: '30px 0' }}>
                             <div className="empty-icon">🤖</div>
-                            <div className="empty-title">No Insights Yet</div>
-                            <p className="empty-desc">AI insights generate automatically after uploading a statement.</p>
+                            <div className="empty-title">{t('dash_no_insights')}</div>
+                            <p className="empty-desc">{t('dash_no_insights_desc')}</p>
                         </div>
                     )}
 
@@ -347,9 +353,9 @@ export default function DashboardPage() {
                 {/* Recent transactions */}
                 <div className="card">
                     <div className="flex-between mb-16">
-                        <h3 className="section-title" style={{ marginBottom: 0 }}>Recent Transactions</h3>
+                        <h3 className="section-title" style={{ marginBottom: 0 }}>{t('dash_recent_transactions')}</h3>
                         <button className="btn btn-ghost btn-sm" onClick={() => navigate('/transactions')} style={{ gap: 4 }}>
-                            View All <ArrowRight size={14} />
+                            {t('dash_view_all')} <ArrowRight size={14} />
                         </button>
                     </div>
                     {recentTx.length > 0 ? (
@@ -366,10 +372,10 @@ export default function DashboardPage() {
                                     </div>
                                     <div style={{ flex: 1, minWidth: 0 }}>
                                         <div style={{ fontSize: 13, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tx.description}</div>
-                                        <div style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>{new Date(tx.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} • {CATEGORY_LABELS[tx.category] || tx.category}</div>
+                                        <div style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>{new Date(tx.date).toLocaleDateString(locale, { month: 'short', day: 'numeric' })} • {CATEGORY_LABELS[tx.category] || tx.category}</div>
                                     </div>
                                     <div style={{ fontSize: 14, fontWeight: 700, color: tx.type === 'income' ? 'var(--color-success)' : 'var(--color-danger)', flexShrink: 0 }}>
-                                        {tx.type === 'income' ? '+' : '-'}${Math.abs(tx.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                        {tx.type === 'income' ? '+' : '-'}{formatCurrency(Math.abs(tx.amount), currency, locale)}
                                     </div>
                                 </div>
                             ))}
@@ -377,10 +383,10 @@ export default function DashboardPage() {
                     ) : (
                         <div className="empty-state" style={{ padding: '30px 0' }}>
                             <div className="empty-icon">💳</div>
-                            <div className="empty-title">No Transactions Yet</div>
-                            <p className="empty-desc">Upload a statement or add transactions manually.</p>
+                            <div className="empty-title">{t('dash_no_tx')}</div>
+                            <p className="empty-desc">{t('dash_no_tx_desc')}</p>
                             <button className="btn btn-secondary btn-sm" onClick={() => navigate('/statements')}>
-                                <Upload size={14} /> Upload Statement
+                                <Upload size={14} /> {t('dash_upload_stmt')}
                             </button>
                         </div>
                     )}

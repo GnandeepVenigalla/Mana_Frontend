@@ -1,22 +1,26 @@
 import { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '../../lib/formatCurrency';
 import {
     LayoutDashboard, ArrowLeftRight, FileText, Lightbulb,
-    User, LogOut, Menu, X, Bell, Settings, TrendingUp
+    User, LogOut, Menu, X, Bell, Settings, TrendingUp, Target
 } from 'lucide-react';
 
 const navItems = [
-    { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
-    { path: '/statements', label: 'Statements', icon: FileText },
-    { path: '/insights', label: 'AI Insights', icon: Lightbulb },
+    { path: '/dashboard', labelKey: 'nav_dashboard', icon: LayoutDashboard },
+    { path: '/transactions', labelKey: 'nav_transactions', icon: ArrowLeftRight },
+    { path: '/statements', labelKey: 'nav_statements', icon: FileText },
+    { path: '/insights', labelKey: 'nav_insights', icon: Lightbulb },
+    { path: '/goals', labelKey: 'nav_goals', icon: Target },
 ];
 
 export default function AppLayout() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const { t } = useTranslation();
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const handleLogout = () => { logout(); navigate('/login'); };
@@ -24,8 +28,8 @@ export default function AppLayout() {
 
     const getPageTitle = () => {
         const item = navItems.find(n => location.pathname === n.path);
-        if (location.pathname === '/profile') return 'Profile';
-        return item?.label || 'Dashboard';
+        if (location.pathname === '/profile') return t('nav_profile');
+        return item ? t(item.labelKey) : t('nav_dashboard');
     };
 
     const initials = user ? `${user.firstName[0]}${user.lastName[0]}`.toUpperCase() : 'U';
@@ -53,29 +57,29 @@ export default function AppLayout() {
                 </div>
 
                 <nav className="sidebar-nav">
-                    <span className="nav-label">Main Menu</span>
-                    {navItems.map(({ path, label, icon: Icon }) => (
+                    <span className="nav-label">{t('menu_main')}</span>
+                    {navItems.map(({ path, labelKey, icon: Icon }) => (
                         <button
                             key={path}
                             className={`nav-item ${location.pathname === path ? 'active' : ''}`}
                             onClick={() => { navigate(path); closeSidebar(); }}
                         >
                             <Icon className="nav-icon" size={18} />
-                            {label}
+                            {t(labelKey)}
                         </button>
                     ))}
 
-                    <span className="nav-label" style={{ marginTop: 8 }}>Account</span>
+                    <span className="nav-label" style={{ marginTop: 8 }}>{t('menu_account')}</span>
                     <button
                         className={`nav-item ${location.pathname === '/profile' ? 'active' : ''}`}
                         onClick={() => { navigate('/profile'); closeSidebar(); }}
                     >
                         <User className="nav-icon" size={18} />
-                        Profile
+                        {t('nav_profile')}
                     </button>
                     <button className="nav-item" onClick={handleLogout}>
                         <LogOut className="nav-icon" size={18} />
-                        Sign Out
+                        {t('nav_signout')}
                     </button>
                 </nav>
 
@@ -104,7 +108,7 @@ export default function AppLayout() {
                         {user?.income?.monthly > 0 && (
                             <div className="tag tag-blue" style={{ fontSize: 12.5 }}>
                                 <TrendingUp size={12} style={{ marginRight: 4 }} />
-                                ${(user.income.monthly).toLocaleString()}/mo
+                                {formatCurrency(user.income.monthly, user.income?.currency || 'USD', t('language_en') === 'English' ? 'en-US' : 'te-IN')}/mo
                             </div>
                         )}
                         <button className="topbar-btn">
