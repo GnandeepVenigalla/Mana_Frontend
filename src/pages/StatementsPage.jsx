@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import api from '../lib/api';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { Upload, FileText, Trash2, RefreshCw, CheckCircle, XCircle, Clock, AlertCircle } from 'lucide-react';
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -24,6 +25,7 @@ function StatusBadge({ status }) {
 }
 
 export default function StatementsPage() {
+    const { t } = useTranslation();
     const [statements, setStatements] = useState([]);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
@@ -114,14 +116,14 @@ export default function StatementsPage() {
         <div className="page-container">
             <div className="page-header">
                 <div>
-                    <h1 className="page-title">Bank Statements</h1>
-                    <p className="page-subtitle">Upload PDF or CSV bank/credit card statements for AI analysis</p>
+                    <h1 className="page-title">{t('stmt_title')}</h1>
+                    <p className="page-subtitle">{t('stmt_subtitle')}</p>
                 </div>
             </div>
 
             {/* Upload Section */}
             <div className="card mb-24">
-                <h3 className="section-title">📤 Upload New Statement</h3>
+                <h3 className="section-title">{t('stmt_upload_new')}</h3>
 
                 {/* Dropzone */}
                 <div {...getRootProps()} className={`dropzone ${isDragActive ? 'active' : ''}`} style={{ marginBottom: 20 }}>
@@ -138,9 +140,9 @@ export default function StatementsPage() {
                     ) : (
                         <>
                             <div className="dropzone-icon">📂</div>
-                            <div className="dropzone-title">{isDragActive ? 'Drop it here!' : 'Drop your statement here'}</div>
-                            <div className="dropzone-subtitle">Supports PDF and CSV files up to 10MB</div>
-                            <button className="btn btn-secondary btn-sm" type="button">Browse Files</button>
+                            <div className="dropzone-title">{isDragActive ? 'Drop it here!' : t('stmt_drop')}</div>
+                            <div className="dropzone-subtitle">{t('stmt_supports')}</div>
+                            <button className="btn btn-secondary btn-sm" type="button">{t('stmt_browse')}</button>
                         </>
                     )}
                 </div>
@@ -148,23 +150,23 @@ export default function StatementsPage() {
                 {/* Metadata */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 14, marginBottom: 16 }}>
                     <div className="form-group">
-                        <label className="form-label">Month</label>
+                        <label className="form-label">{t('stmt_month')}</label>
                         <select className="form-select" value={uploadMeta.month} onChange={e => setUploadMeta(p => ({ ...p, month: parseInt(e.target.value) }))}>
                             {MONTHS.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
                         </select>
                     </div>
                     <div className="form-group">
-                        <label className="form-label">Year</label>
+                        <label className="form-label">{t('stmt_year')}</label>
                         <select className="form-select" value={uploadMeta.year} onChange={e => setUploadMeta(p => ({ ...p, year: parseInt(e.target.value) }))}>
                             {[2023, 2024, 2025, 2026].map(y => <option key={y} value={y}>{y}</option>)}
                         </select>
                     </div>
                     <div className="form-group">
-                        <label className="form-label">Bank Name</label>
+                        <label className="form-label">{t('stmt_bank_name')}</label>
                         <input className="form-input" placeholder="e.g. Chase Bank" value={uploadMeta.bankName} onChange={e => setUploadMeta(p => ({ ...p, bankName: e.target.value }))} />
                     </div>
                     <div className="form-group">
-                        <label className="form-label">Account Type</label>
+                        <label className="form-label">{t('stmt_account_type')}</label>
                         <select className="form-select" value={uploadMeta.accountType} onChange={e => setUploadMeta(p => ({ ...p, accountType: e.target.value }))}>
                             <option value="checking">Checking</option>
                             <option value="savings">Savings</option>
@@ -195,15 +197,15 @@ export default function StatementsPage() {
                 >
                     {uploading
                         ? <><div className="spinner" style={{ width: 18, height: 18 }} />Processing...</>
-                        : <><Upload size={16} />Upload & Analyze</>}
+                        : <><Upload size={16} />{t('stmt_upload_btn')}</>}
                 </button>
             </div>
 
             {/* Statements List */}
             <div className="card">
                 <div className="flex-between mb-20">
-                    <h3 className="section-title" style={{ marginBottom: 0 }}>📂 Statement History ({statements.length})</h3>
-                    <button className="btn btn-ghost btn-sm" onClick={load}><RefreshCw size={14} /> Refresh</button>
+                    <h3 className="section-title" style={{ marginBottom: 0 }}>📂 {t('stmt_history')} ({statements.length})</h3>
+                    <button className="btn btn-ghost btn-sm" onClick={load}><RefreshCw size={14} /></button>
                 </div>
 
                 {loading ? (
@@ -264,8 +266,8 @@ export default function StatementsPage() {
                 ) : (
                     <div className="empty-state">
                         <div className="empty-icon">📂</div>
-                        <div className="empty-title">No Statements Uploaded</div>
-                        <p className="empty-desc">Upload your first bank or credit card statement above to get started with AI-powered analysis.</p>
+                        <div className="empty-title">{t('stmt_no_stmts')}</div>
+                        <p className="empty-desc">{t('stmt_no_stmts_desc')}</p>
                     </div>
                 )}
             </div>

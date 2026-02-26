@@ -1,7 +1,11 @@
 import axios from 'axios';
 
+const isDev = import.meta.env.DEV;
+const prodUrl = import.meta.env.VITE_API_URL || 'https://mana-backend-six.vercel.app/api';
+const localUrl = 'http://localhost:5001/api';
+
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5001/api',
+    baseURL: isDev ? localUrl : prodUrl,
     timeout: 30000,
 });
 

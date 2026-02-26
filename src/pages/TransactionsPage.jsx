@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '../context/AuthContext';
 import api from '../lib/api';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '../lib/formatCurrency';
 import { Plus, Search, Filter, Trash2, Edit2, Check, X } from 'lucide-react';
 
 const CATEGORIES = [
@@ -122,6 +125,8 @@ function TransactionModal({ onClose, onSave, editTx }) {
 }
 
 export default function TransactionsPage() {
+    const { user } = useAuth();
+    const { t, i18n } = useTranslation();
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
@@ -133,6 +138,9 @@ export default function TransactionsPage() {
     const [selYear, setSelYear] = useState(now.getFullYear());
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
+
+    const locale = i18n.language === 'te' ? 'te-IN' : 'en-US';
+    const currency = user?.income?.currency || 'USD';
 
     const load = useCallback(async () => {
         setLoading(true);
@@ -172,26 +180,26 @@ export default function TransactionsPage() {
         <div className="page-container">
             <div className="page-header flex-stack" style={{ marginBottom: 28 }}>
                 <div>
-                    <h1 className="page-title">Transactions</h1>
+                    <h1 className="page-title">{t('trans_title')}</h1>
                     <p className="page-subtitle">{total} transactions · {MONTHS[selMonth - 1]} {selYear}</p>
                 </div>
                 <button className="btn btn-primary btn-sm w-full-mobile" id="add-tx-btn" onClick={() => { setEditingTx(null); setShowModal(true); }}>
-                    <Plus size={16} /> Add Transaction
+                    <Plus size={16} /> {t('add_tx_btn')}
                 </button>
             </div>
 
             {/* Summary mini-cards */}
             <div className="grid-stack dashboard-stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}>
                 {[
-                    { label: 'Total Income', value: totalIncome, color: 'var(--color-success)', icon: '💰' },
-                    { label: 'Total Expenses', value: totalExpenses, color: 'var(--color-danger)', icon: '💸' },
-                    { label: 'Net', value: totalIncome - totalExpenses, color: totalIncome - totalExpenses >= 0 ? 'var(--color-success)' : 'var(--color-danger)', icon: '📊' },
+                    { label: t('total_income'), value: totalIncome, color: 'var(--color-success)', icon: '💰' },
+                    { label: t('total_expenses'), value: totalExpenses, color: 'var(--color-danger)', icon: '💸' },
+                    { label: t('net_bal'), value: totalIncome - totalExpenses, color: totalIncome - totalExpenses >= 0 ? 'var(--color-success)' : 'var(--color-danger)', icon: '📊' },
                 ].map(c => (
                     <div key={c.label} className="card card-sm" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                         <span style={{ fontSize: 24 }}>{c.icon}</span>
                         <div>
                             <div style={{ fontSize: 11, color: 'var(--color-text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>{c.label}</div>
-                            <div style={{ fontSize: 18, fontWeight: 800, color: c.color }}>${Math.abs(c.value).toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                            <div style={{ fontSize: 18, fontWeight: 800, color: c.color }}>{formatCurrency(Math.abs(c.value), currency, locale)}</div>
                         </div>
                     </div>
                 ))}
@@ -235,11 +243,11 @@ export default function TransactionsPage() {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>DATE</th>
-                                    <th>DESCRIPTION</th>
-                                    <th>CATEGORY</th>
-                                    <th>TYPE</th>
-                                    <th style={{ textAlign: 'right' }}>AMOUNT</th>
+                                    <th>{t('tx_col_date', 'DATE')}</th>
+                                    <th>{t('tx_col_desc', 'DESCRIPTION')}</th>
+                                    <th>{t('tx_col_cat', 'CATEGORY')}</th>
+                                    <th>{t('tx_col_type', 'TYPE')}</th>
+                                    <th style={{ textAlign: 'right' }}>{t('tx_col_amt', 'AMOUNT')}</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -264,7 +272,7 @@ export default function TransactionsPage() {
                                             </span>
                                         </td>
                                         <td style={{ textAlign: 'right', fontWeight: 700, color: tx.type === 'income' ? 'var(--color-success)' : 'var(--color-danger)' }}>
-                                            {tx.type === 'income' ? '+' : '-'}${Math.abs(tx.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                            {tx.type === 'income' ? '+' : '-'}{formatCurrency(Math.abs(tx.amount), currency, locale)}
                                         </td>
                                         <td>
                                             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
@@ -285,9 +293,9 @@ export default function TransactionsPage() {
             ) : (
                 <div className="empty-state card">
                     <div className="empty-icon">💳</div>
-                    <div className="empty-title">No Transactions Found</div>
-                    <p className="empty-desc">No transactions match your filters. Try adjusting the month or category filter.</p>
-                    <button className="btn btn-primary btn-sm" onClick={() => { setEditingTx(null); setShowModal(true); }}><Plus size={14} /> Add Manually</button>
+                    <div className="empty-title">{t('no_tx_found')}</div>
+                    <p className="empty-desc">{t('tx_empty_desc', 'No transactions match your filters. Try adjusting the month or category filter.')}</p>
+                    <button className="btn btn-primary btn-sm" onClick={() => { setEditingTx(null); setShowModal(true); }}><Plus size={14} /> {t('tx_add_manual', 'Add Manually')}</button>
                 </div>
             )}
 

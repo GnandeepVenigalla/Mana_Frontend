@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import api from '../lib/api';
+import i18n from '../lib/i18n';
 
 const AuthContext = createContext(null);
 
@@ -11,6 +12,15 @@ export function AuthProvider({ children }) {
         } catch { return null; }
     });
     const [loading, setLoading] = useState(true);
+
+    // Apply language globally whenever user changes
+    useEffect(() => {
+        if (user && user.language) {
+            i18n.changeLanguage(user.language);
+        } else {
+            i18n.changeLanguage('en');
+        }
+    }, [user]);
 
     // Verify token on mount
     useEffect(() => {

@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../lib/api';
 import toast from 'react-hot-toast';
-import { User, Settings, Lock, Save, DollarSign, Target, Briefcase, CreditCard } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { User, Settings, Lock, Save, DollarSign, Target, Briefcase, CreditCard, Globe } from 'lucide-react';
 
 const CATEGORIES = [
     { id: 'shopping', label: 'Shopping' },
@@ -20,6 +21,7 @@ const CATEGORIES = [
 
 export default function ProfilePage() {
     const { user, updateUser } = useAuth();
+    const { t, i18n } = useTranslation();
     const [loading, setLoading] = useState(false);
 
     // Tab state
@@ -34,6 +36,8 @@ export default function ProfilePage() {
         jobTitle: '',
         savingsGoal: 0,
         creditScore: 0,
+        language: 'en',
+        currency: 'USD',
     });
 
     // Budgets state
@@ -69,6 +73,8 @@ export default function ProfilePage() {
                 jobTitle: user.income?.jobTitle || '',
                 savingsGoal: user.savingsGoal || 0,
                 creditScore: user.creditScore || 0,
+                language: user.language || 'en',
+                currency: user.income?.currency || 'USD',
             });
             if (user.budgetLimits) {
                 setBudgets({
@@ -89,13 +95,16 @@ export default function ProfilePage() {
                 income: {
                     monthly: parseFloat(formData.incomeMonthly),
                     jobTitle: formData.jobTitle,
+                    currency: formData.currency,
                 },
                 savingsGoal: parseFloat(formData.savingsGoal),
-                creditScore: parseFloat(formData.creditScore)
+                creditScore: parseFloat(formData.creditScore),
+                language: formData.language,
             };
             const res = await api.put('/users/profile', payload);
             updateUser(res.data.user);
-            toast.success('Profile updated successfully');
+            i18n.changeLanguage(formData.language);
+            toast.success(t('profile_updated'));
         } catch (err) {
             toast.error(err.response?.data?.message || 'Failed to update profile');
         } finally {
@@ -144,8 +153,8 @@ export default function ProfilePage() {
     return (
         <div className="page-container" style={{ maxWidth: 1000, margin: '0 auto' }}>
             <div className="page-header mb-32">
-                <h1 className="page-title">Profile Settings</h1>
-                <p className="page-subtitle">Manage your account, financial goals, and budgets.</p>
+                <h1 className="page-title">{t('profile_settings')}</h1>
+                <p className="page-subtitle">{t('profile_subtitle')}</p>
             </div>
 
             <div className="profile-layout" style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: 32, alignItems: 'start' }}>
@@ -170,21 +179,28 @@ export default function ProfilePage() {
                         onClick={() => setActiveTab('general')}
                         style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', borderRadius: 8, textAlign: 'left', fontWeight: 500, background: activeTab === 'general' ? 'rgba(255,255,255,0.05)' : 'transparent', color: activeTab === 'general' ? '#fff' : 'var(--color-text-muted)', border: 'none', cursor: 'pointer', transition: 'all 0.2s' }}
                     >
-                        <User size={18} /> General
+                        <User size={18} /> {t('tab_general')}
                     </button>
                     <button
                         className={`tab-btn ${activeTab === 'budgets' ? 'active' : ''}`}
                         onClick={() => setActiveTab('budgets')}
                         style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', borderRadius: 8, textAlign: 'left', fontWeight: 500, background: activeTab === 'budgets' ? 'rgba(255,255,255,0.05)' : 'transparent', color: activeTab === 'budgets' ? '#fff' : 'var(--color-text-muted)', border: 'none', cursor: 'pointer', transition: 'all 0.2s' }}
                     >
-                        <Target size={18} /> Budget Limits
+                        <Target size={18} /> {t('tab_budgets')}
                     </button>
                     <button
                         className={`tab-btn ${activeTab === 'security' ? 'active' : ''}`}
                         onClick={() => setActiveTab('security')}
                         style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', borderRadius: 8, textAlign: 'left', fontWeight: 500, background: activeTab === 'security' ? 'rgba(255,255,255,0.05)' : 'transparent', color: activeTab === 'security' ? '#fff' : 'var(--color-text-muted)', border: 'none', cursor: 'pointer', transition: 'all 0.2s' }}
                     >
-                        <Lock size={18} /> Security
+                        <Lock size={18} /> {t('tab_security')}
+                    </button>
+                    <button
+                        className={`tab-btn ${activeTab === 'settings' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('settings')}
+                        style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', borderRadius: 8, textAlign: 'left', fontWeight: 500, background: activeTab === 'settings' ? 'rgba(255,255,255,0.05)' : 'transparent', color: activeTab === 'settings' ? '#fff' : 'var(--color-text-muted)', border: 'none', cursor: 'pointer', transition: 'all 0.2s' }}
+                    >
+                        <Globe size={18} /> {t('tab_app_settings')}
                     </button>
                 </div>
 
@@ -306,6 +322,37 @@ export default function ProfilePage() {
                                 <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 20, borderTop: '1px solid var(--color-border)' }}>
                                     <button type="submit" className="btn btn-primary" disabled={loading}>
                                         <Lock size={16} /> {loading ? 'Updating...' : 'Update Password'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    )}
+
+                    {activeTab === 'settings' && (
+                        <div className="card">
+                            <form onSubmit={handleGeneralSubmit}>
+                                <h3 className="section-title mb-24">{t('tab_app_settings')}</h3>
+                                <div className="grid-2 mb-32">
+                                    <div className="form-group">
+                                        <label className="form-label">{t('lang_pref')}</label>
+                                        <select className="form-input" value={formData.language} onChange={e => setFormData({ ...formData, language: e.target.value })}>
+                                            <option value="en">{t('language_en')}</option>
+                                            <option value="te">{t('language_te')}</option>
+                                        </select>
+                                        <p style={{ fontSize: 12, color: 'var(--color-text-muted)', marginTop: 8 }}>Choose the display language.</p>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">{t('currency_pref')}</label>
+                                        <select className="form-input" value={formData.currency} onChange={e => setFormData({ ...formData, currency: e.target.value })}>
+                                            <option value="USD">{t('currency_usd')}</option>
+                                            <option value="INR">{t('currency_inr')}</option>
+                                        </select>
+                                        <p style={{ fontSize: 12, color: 'var(--color-text-muted)', marginTop: 8 }}>Choose your primary display currency.</p>
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 20, borderTop: '1px solid var(--color-border)' }}>
+                                    <button type="submit" className="btn btn-primary" disabled={loading}>
+                                        <Save size={16} /> {loading ? 'Saving...' : t('save_settings')}
                                     </button>
                                 </div>
                             </form>

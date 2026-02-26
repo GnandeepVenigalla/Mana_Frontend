@@ -1,18 +1,20 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { Eye, EyeOff, UserPlus } from 'lucide-react';
 
 export default function RegisterPage() {
     const { register } = useAuth();
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
     const [step, setStep] = useState(1);
     const [showPw, setShowPw] = useState(false);
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
         firstName: '', lastName: '', email: '',
-        password: '', confirmPassword: '',
+        password: '', confirmPassword: '', language: 'en', currency: 'USD'
     });
     const [errors, setErrors] = useState({});
 
@@ -41,6 +43,8 @@ export default function RegisterPage() {
                 lastName: form.lastName,
                 email: form.email,
                 password: form.password,
+                language: form.language,
+                currency: form.currency,
             });
             toast.success('Account created! Let\'s set up your profile 🎉');
         } catch (err) {
@@ -151,6 +155,35 @@ export default function RegisterPage() {
                                 <label className="form-label" htmlFor="reg-cpw">Confirm Password <span className="required">*</span></label>
                                 <input id="reg-cpw" type="password" className="form-input" placeholder="Re-enter password" value={form.confirmPassword} onChange={e => update('confirmPassword', e.target.value)} />
                                 {errors.confirmPassword && <span className="form-error">⚠ {errors.confirmPassword}</span>}
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label" htmlFor="reg-lang">{t('lang_pref')}</label>
+                                <select
+                                    id="reg-lang"
+                                    className="form-input"
+                                    value={form.language || 'en'}
+                                    onChange={e => {
+                                        update('language', e.target.value);
+                                        i18n.changeLanguage(e.target.value);
+                                    }}
+                                >
+                                    <option value="en">{t('language_en')}</option>
+                                    <option value="te">{t('language_te')}</option>
+                                </select>
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label" htmlFor="reg-currency">{t('currency_pref')}</label>
+                                <select
+                                    id="reg-currency"
+                                    className="form-input"
+                                    value={form.currency || 'USD'}
+                                    onChange={e => update('currency', e.target.value)}
+                                >
+                                    <option value="USD">{t('currency_usd')}</option>
+                                    <option value="INR">{t('currency_inr')}</option>
+                                </select>
                             </div>
 
                             <button className="btn btn-primary btn-lg w-full" style={{ justifyContent: 'center', marginTop: 4 }} onClick={handleNext} id="reg-next">
